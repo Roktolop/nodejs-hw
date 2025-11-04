@@ -33,7 +33,7 @@ app.get('/notes', (req, res) => {
 });
 
 //GET /notes/:id
-app.get('/notes/:id', (req, res) => {
+app.get('/notes/:noteid', (req, res) => {
   const { id } = req.params;
 
   res.status(200).json(
