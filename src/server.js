@@ -29,10 +29,6 @@ app.get('/notes/:noteId', (req, res) => {
     { "message": `Retrieved note with ID: ${noteId}` });
 });
 
-app.get('/test-error', () => {
-  throw new Error('Simulated server error');
-});
-
 //Unknown routes handler
 app.use(notFoundHandler);
 
