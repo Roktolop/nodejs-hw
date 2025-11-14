@@ -1,5 +1,5 @@
 import { Joi, Segments } from 'celebrate';
-import { TAGS } from '../src/constants/tags.js';
+import { TAGS } from '../constants/tags.js';
 import { isValidObjectId } from 'mongoose';
 
 // Validation for GET /notes
