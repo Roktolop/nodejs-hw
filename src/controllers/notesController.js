@@ -3,9 +3,34 @@ import createHttpError from 'http-errors';
 
 //GET /notes
 export const getAllNotes = async (req, res) => {
-  const notes = await Note.find();
+  const { page, perPage, tag, search } = req.query;
+  const skip = (page - 1) * perPage;
 
-  res.status(200).json(notes);
+  const notesQuery = Note.find();
+
+  if (search) {
+    notesQuery.where({
+      $text: { $search: search}
+    });
+  }
+  if (tag) {
+    notesQuery.where('tag').equals(tag);
+  }
+
+  const [totalItems, notes] = await Promise.all([
+    notesQuery.clone().countDocuments(),
+    notesQuery.skip(skip).limit(perPage),
+  ]);
+
+  const totalPages = Math.ceil(totalItems / perPage);
+
+  res.status(200).json({
+    page: page,
+    perPage: perPage,
+    totalNotes: totalItems,
+    totalPages: totalPages,
+    notes: notes
+  });
 };
 
 //GET /notes/:noteId

@@ -6,6 +6,7 @@ import { notFoundHandler } from './middleware/notFoundHandler.js';
 import { logger } from './middleware/logger.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import notesRoutes from './routes/notesRoutes.js';
+import { errors } from 'celebrate';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -21,6 +22,9 @@ app.use(notesRoutes);
 
 //Unknown routes handler
 app.use(notFoundHandler);
+
+//Celebrate error handler
+app.use(errors());
 
 //Global error handler
 app.use(errorHandler);
