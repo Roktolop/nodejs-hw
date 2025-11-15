@@ -68,9 +68,14 @@ export const updateNote = async (req, res, next) => {
 };
 
 //DELETE /notes/:noteId
-export const deleteNote = async (req, res) => {
+export const deleteNote = async (req, res, next) => {
   const { noteId } = req.params;
   const deleteNote = await Note.findByIdAndDelete(noteId);
+
+  if (!deleteNote) {
+    next(createHttpError(404, 'Note not found'));
+    return;
+  }
 
   res.status(200).json({
     note: deleteNote
