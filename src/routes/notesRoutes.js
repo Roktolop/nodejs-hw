@@ -5,7 +5,7 @@ import { createNoteSchema, getAllNotesSchema, noteIdSchema, updateNoteSchema  } 
 
 const router = Router();
 
-router.get('/notes', celebrate(getAllNotesSchema ), getAllNotes);
+router.get('/notes', celebrate(getAllNotesSchema), getAllNotes);
 
 router.get('/notes/:noteId', celebrate(noteIdSchema), getNoteById);
 
