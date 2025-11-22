@@ -29,7 +29,7 @@ export const getAllNotes = async (req, res) => {
     perPage: perPage,
     totalNotes: totalItems,
     totalPages: totalPages,
-    notes: notes
+    notes: notes,
   });
 };
 
