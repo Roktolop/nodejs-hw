@@ -107,7 +107,7 @@ export const requestResetEmail = async(req, res, next) => {
   }
 
   const resetToken = jwt.sign(
-    { sub: user._id },
+    { sub: user._id, email },
     process.env.JWT_SECRET,
     { expiresIn: '15m' }
   );
@@ -140,3 +140,40 @@ export const requestResetEmail = async(req, res, next) => {
 
   res.status(200).json({ message: "Password reset email sent successfully." });
 };
+
+// Controller function to handle password reset
+export const resetPassword = async (req, res, next) => {
+  const { password, token } = req.body;
+
+  let payLoad;
+  try {
+    payLoad = jwt.verify(token, process.env.JWT_SECRET);
+  } catch {
+    next(createHttpError(401, 'Invalid or expired token'));
+    return;
+  }
+
+  console.log(payLoad);
+
+  const user = await User.findOne({
+    _id: payLoad.sub,
+    email: payLoad.email
+  });
+  if (!user) {
+    next(createHttpError(404, 'User not found'));
+    return;
+  }
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+  await User.updateOne(
+    { _id: user._id },
+    { password: hashedPassword }
+  );
+
+  // Invalidate all existing sessions
+  await Session.deleteMany({ userId: user._id });
+
+  res.status(200).json({ message: 'Password reset successfully' });
+};
+
+
