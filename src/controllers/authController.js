@@ -101,17 +101,20 @@ export const requestResetEmail = async(req, res, next) => {
   const { email } = req.body;
 
   const user = await User.findOne({ email });
+
   if (!user) {
     return res.status(200).json({ message: "Password reset email sent successfully." });
   }
 
-  const resetToken = jwt.sign({ sub: user._id },
+  const resetToken = jwt.sign(
+    { sub: user._id },
     process.env.JWT_SECRET,
     { expiresIn: '15m' }
   );
 
   // Construct reset link (assuming frontend URL is stored in env variable)
-  const templatePath = path.resolve("/src/emplates/reset-password-email.html");
+  const templatePath = path.resolve(`src/templates/reset-password-email.html`);
+
 
   const templateSource = await fs.readFile(templatePath, 'utf-8');
 
@@ -129,7 +132,8 @@ export const requestResetEmail = async(req, res, next) => {
       subject: "Reset your password",
       html,
     });
-  } catch {
+  } catch (error) {
+    console.error("SEND EMAIL ERROR:", error);
     next(createHttpError(500, 'Failed to send the email, please try again later.'));
     return;
   }
