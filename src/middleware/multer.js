@@ -1,0 +1,15 @@
+import multer from "multer";
+
+export const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    filesize: 2 * 1024 * 1024, // 2 MB
+  },
+  fileFilter: (req, file, cb) => {
+    if (!file.mimetype || !file.mimetype.startsWith('image/')) {
+      return cb(new Error("Only images allowed"));
+    }
+
+    cb(null, true);
+  }
+});
