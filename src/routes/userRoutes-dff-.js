@@ -11,5 +11,3 @@ router.patch("/users/me/avatar",
   updateUserAvatar);
 
 export default router;
-
-// ---
