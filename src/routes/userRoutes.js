@@ -7,7 +7,7 @@ const router = Router();
 
 router.patch("/users/me/avatar",
   authenticate,
-  upload.single("imageForAvatar"),
+  upload.single("avatar"),
   updateUserAvatar);
 
 export default router;
